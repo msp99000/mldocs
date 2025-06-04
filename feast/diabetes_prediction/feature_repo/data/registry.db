@@ -1,0 +1,40 @@
+
+J
+*
+patient"
+patient_idJdiabetes_prediction
+Ò…€ÂØ…¬ÏÑ†€ÂàéÍÙ
+J
+*
+__dummy"
+__dummy_idJdiabetes_prediction
+Ò…€Âà±ÏÑ†€Âğ¥ÔÙ1"$23af28a8-9ab0-4749-93f7-9695926dfa68*Ó†€Âè¾í2´
+Ø
+predictors_df_feature_viewdiabetes_predictionpatient"
+Pregnancies"
+Glucose"
+BloodPressure"
+SkinThickness"
+Insulin"
+BMI"
+DiabetesPedigreeFunction"
+Age2€Æ
+:‚event_timestampZdata/predictors_df.parquetŠ1feast.infra.offline_stores.file_source.FileSource¢data/predictors_df.parquet@b
+
+patient_idW
+Ò…€ÂÈö–ÏÓ†€Â¨Ëû
+å¿õÁøå±×½ ÂèõèÖ
+½ ÂèõèÖª¡ÂèÀÍÔ2³
+×
+target_df_feature_viewdiabetes_predictionpatient"
+Outcome2€Æ
+:zevent_timestampZdata/target_df.parquetŠ1feast.infra.offline_stores.file_source.FileSource¢data/target_df.parquet@b
+
+patient_idW
+Ò…€Âˆ¤ÏÓ†€ÂÈºä
+å¿õÁÀëŒî½ ÂèõèÖ
+½ ÂèõèÖª¡ÂèÀÍÔbevent_timestampZdata/target_df.parquetŠ1feast.infra.offline_stores.file_source.FileSource¢data/target_df.parquetªdiabetes_predictionb˜event_timestampZdata/predictors_df.parquetŠ1feast.infra.offline_stores.file_source.FileSource¢data/predictors_df.parquetªdiabetes_predictionz;
+diabetes_prediction$45c7194f-a2d4-40e6-8240-cd4b1062cb15Š5
+
+diabetes_prediction
+Ò…€Â¨¥ıÎÒ…€Â¨¥ıÎ
