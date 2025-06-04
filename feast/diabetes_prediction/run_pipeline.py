@@ -24,15 +24,12 @@ def run_step(step_name, function):
 
 def build_data():
     print("Building feature data...")
-    # Import the module and run its code - this is cleaner than importing the module globally
-    # as it prevents circular imports and namespace issues
     sys.path.append(os.path.dirname(os.path.abspath(__file__)))
     import build_data
     print("Data built and saved to feature_repo/data/")
 
 def apply_feast():
     print("Applying Feast feature definitions...")
-    # Import feature definitions from the feature_repo directory
     sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "feature_repo"))
     from feature_definitions import patient, predictors_fv, target_fv
     
