@@ -1,29 +1,112 @@
-# Feast Quickstart
-If you haven't already, check out the quickstart guide on Feast's website (http://docs.feast.dev/quickstart), which 
-uses this repo. A quick view of what's in this repository's `feature_repo/` directory:
+# Diabetes Prediction with Feast
 
-* `data/` contains raw demo parquet data
-* `feature_repo/example_repo.py` contains demo feature definitions
-* `feature_repo/feature_store.yaml` contains a demo setup configuring where data sources are
-* `feature_repo/test_workflow.py` showcases how to run all key Feast commands, including defining, retrieving, and pushing features. 
+This project demonstrates how to use Feast (Feature Store) to build a diabetes prediction model. It shows the complete workflow from feature definition to model serving.
 
-You can run the overall workflow with `python test_workflow.py`.
+## Project Overview
 
-## To move from this into a more production ready workflow:
-> See more details in [Running Feast in production](https://docs.feast.dev/how-to-guides/running-feast-in-production)
+The diabetes prediction model uses health metrics like glucose levels, BMI, and blood pressure to predict diabetes risk. Feast manages feature values, ensuring consistency between training and inference.
 
-1. First: you should start with a different Feast template, which delegates to a more scalable offline store. 
-   - For example, running `feast init -t gcp`
-   or `feast init -t aws` or `feast init -t snowflake`. 
-   - You can see your options if you run `feast init --help`.
-2. `feature_store.yaml` points to a local file as a registry. You'll want to setup a remote file (e.g. in S3/GCS) or a 
-SQL registry. See [registry docs](https://docs.feast.dev/getting-started/concepts/registry) for more details. 
-3. This example uses a file [offline store](https://docs.feast.dev/getting-started/components/offline-store) 
-   to generate training data. It does not scale. We recommend instead using a data warehouse such as BigQuery, 
-   Snowflake, Redshift. There is experimental support for Spark as well.
-4. Setup CI/CD + dev vs staging vs prod environments to automatically update the registry as you change Feast feature definitions. See [docs](https://docs.feast.dev/how-to-guides/running-feast-in-production#1.-automatically-deploying-changes-to-your-feature-definitions).
-5. (optional) Regularly scheduled materialization to power low latency feature retrieval (e.g. via Airflow). See [Batch data ingestion](https://docs.feast.dev/getting-started/concepts/data-ingestion#batch-data-ingestion)
-for more details.
-6. (optional) Deploy feature server instances with `feast serve` to expose endpoints to retrieve online features.
-   - See [Python feature server](https://docs.feast.dev/reference/feature-servers/python-feature-server) for details.
-   - Use cases can also directly call the Feast client to fetch features as per [Feature retrieval](https://docs.feast.dev/getting-started/concepts/feature-retrieval)
+## Directory Structure
+
+```
+├── __init__.py
+├── build_data.py
+├── data
+│   └── diabetes.csv
+├── feature_repo
+│   ├── __init__.py
+│   ├── data
+│   │   ├── online_store.db
+│   │   ├── predictors_df.parquet
+│   │   ├── registry.db
+│   │   └── target_df.parquet
+│   ├── feature_definitions.py
+│   └── feature_store.yaml
+├── get_online_features.py
+├── model
+│   └── model.joblib
+├── predict.py
+├── README.md
+├── run_pipeline.py
+└── train_model.py
+```
+
+## How to Run
+
+### One-Step Execution
+
+The simplest way to run the entire pipeline is:
+
+```bash
+python run_pipeline.py
+```
+
+This script will:
+
+1. Build feature data from the diabetes dataset
+2. Apply Feast feature definitions
+3. Train a logistic regression model
+4. Materialize features to the online store
+5. Retrieve online features and make predictions
+
+### Step-by-Step Execution
+
+If you prefer to run each step individually:
+
+1. **Prepare data**
+
+   ```bash
+   python build_data.py
+   ```
+
+2. **Apply feature definitions**
+
+   ```bash
+   cd feature_repo
+   feast apply
+   cd ..
+   ```
+
+3. **Train the model**
+
+   ```bash
+   python train_model.py
+   ```
+
+4. **Materialize features**
+
+   ```bash
+   cd feature_repo
+   feast materialize-incremental $(date -u +"%Y-%m-%dT%H:%M:%S")
+   cd ..
+   ```
+
+5. **Retrieve features and predict**
+   ```bash
+   python get_online_features.py
+   python predict.py
+   ```
+
+## Key Files Explained
+
+- **feature_definitions.py**: Defines the patient entity and feature views for predictors and target
+- **build_data.py**: Prepares the diabetes dataset and adds required timestamps and entity IDs
+- **train_model.py**: Retrieves historical features and trains a logistic regression model
+- **get_online_features.py**: Demonstrates how to retrieve the latest feature values
+- **predict.py**: Applies the trained model to make diabetes predictions
+
+## Production Considerations
+
+For production deployment, consider:
+
+1. Using a more scalable offline store like BigQuery, Snowflake, or Redshift
+2. Setting up a remote registry for feature definitions
+3. Implementing scheduled materialization with Airflow
+4. Deploying a feature server with `feast serve`
+5. Setting up monitoring for feature drift
+
+## Learn More
+
+- [Feast Documentation](https://docs.feast.dev/)
+- [Running Feast in Production](https://docs.feast.dev/how-to-guides/running-feast-in-production)
+- [Feature Retrieval](https://docs.feast.dev/getting-started/concepts/feature-retrieval)
